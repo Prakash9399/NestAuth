@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { User } from './schemas/users.schemas';
 import * as bcrypt from 'bcrypt';
 import {CreateUserDto} from "./Dto/create-user.dto"
+import { DeleteUserResponseDto } from './Dto/delete-user.dto';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
@@ -29,7 +30,8 @@ export class UsersService {
     return this.userModel.find().exec()
   }
 
-  async deleteUser(_id:string){
-    return this.userModel.deleteOne({_id})
+  async deleteUser(_id:string):Promise<DeleteUserResponseDto>{
+    await this.userModel.deleteOne({ _id });
+    return { message: 'User deleted successfully', deletedId: _id };
   }
 }
